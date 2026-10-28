@@ -1,361 +1,400 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أداة التشفير وفك التشفير الشاملة</title>
-    <style>
-        :root {
-            --primary-color: #4f46e5;
-            --primary-hover: #4338ca;
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --text-color: #f8fafc;
-            --border-color: #334155;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            background-color: var(--card-bg);
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-            width: 100%;
-            max-width: 650px;
-            border: 1px solid var(--border-color);
-        }
-
-        h2 {
-            text-align: center;
-            margin-bottom: 25px;
-            color: #818cf8;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        select, input, textarea {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            background-color: #0f172a;
-            color: var(--text-color);
-            font-size: 1rem;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-
-        select:focus, input:focus, textarea:focus {
-            border-color: var(--primary-color);
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        button {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.3s, transform 0.1s;
-        }
-
-        button:active {
-            transform: scale(0.98);
-        }
-
-        .btn-encrypt {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        .btn-encrypt:hover {
-            background-color: var(--primary-hover);
-        }
-
-        .btn-decrypt {
-            background-color: #059669;
-            color: white;
-        }
-
-        .btn-decrypt:hover {
-            background-color: #047857;
-        }
-
-        .result-box {
-            background-color: #0f172a;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            word-break: break-all;
-            min-height: 50px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>أداة التشفير وفك التشفير الشاملة</title>
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --primary-hover: #4338ca;
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --text-color: #f8fafc;
+      --border-color: #334155;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background: var(--bg-color);
+      color: var(--text-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container {
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,.5);
+      width: 100%;
+      max-width: 650px;
+      border: 1px solid var(--border-color);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #818cf8;
+    }
+    .form-group { margin-bottom: 20px; }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    select, input, textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background: #0f172a;
+      color: var(--text-color);
+      font-size: 1rem;
+      outline: none;
+    }
+    select:focus, input:focus, textarea:focus {
+      border-color: var(--primary-color);
+    }
+    textarea { resize: vertical; min-height: 100px; }
+    .btn-group { display: flex; gap: 15px; margin-bottom: 20px; }
+    button {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background .3s, transform .1s;
+    }
+    button:active { transform: scale(.98); }
+    .btn-encrypt { background: var(--primary-color); color: white; }
+    .btn-encrypt:hover { background: var(--primary-hover); }
+    .btn-decrypt { background: #059669; color: white; }
+    .btn-decrypt:hover { background: #047857; }
+    .result-box {
+      background: #0f172a;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+      min-height: 50px;
+      line-height: 1.8;
+    }
+    .btn-copy { width: 100%; margin-top: 10px; background: #475569; color: white; }
+    .btn-copy:hover { background: #64748b; }
+    .note { color: #cbd5e1; font-size: .88rem; line-height: 1.7; margin-top: 12px; }
+    @media (max-width: 480px) {
+      .container { padding: 20px; }
+      .btn-group { flex-direction: column; gap: 10px; }
+    }
+  </style>
 </head>
 <body>
-
-<div class="container">
+  <main class="container">
     <h2>منصة التشفير وفك التشفير</h2>
 
     <div class="form-group">
-        <label for="algorithm">اختر خوارزمية التشفير:</label>
-        <select id="algorithm" onchange="updateKeyLabel()">
-            <option value="caesar">Caesar Cipher Algorithm</option>
-            <option value="xor">XOR Encryption Algorithm</option>
-            <option value="vigenere">Vigenère Cipher (Polyalphabetic)</option>
-            <option value="railfence">Rail Fence Cipher</option>
-            <option value="columnar">Columnar Transposition Cipher</option>
-        </select>
+      <label for="algorithm">اختر خوارزمية التشفير:</label>
+      <select id="algorithm" onchange="updateKeyLabel()">
+        <option value="caesar">Caesar Cipher Algorithm</option>
+        <option value="xor">XOR Encryption Algorithm</option>
+        <option value="vigenere">Vigenère Cipher (Polyalphabetic)</option>
+        <option value="railfence">Rail Fence Cipher</option>
+        <option value="columnar">Columnar Transposition Cipher</option>
+      </select>
     </div>
 
     <div class="form-group">
-        <label for="textInput">النص:</label>
-        <textarea id="textInput" placeholder="أدخل النص هنا..."></textarea>
+      <label for="textInput">النص:</label>
+      <textarea id="textInput" placeholder="أدخل النص هنا..."></textarea>
     </div>
 
     <div class="form-group">
-        <label id="keyLabel" for="keyInput">المفتاح (Key / Shift):</label>
-        <input type="text" id="keyInput" placeholder="أدخل المفتاح المناسب...">
+      <label id="keyLabel" for="keyInput">مقدار الإزاحة (Shift Number):</label>
+      <input type="number" id="keyInput" placeholder="مثال: 3" autocomplete="off">
     </div>
 
     <div class="btn-group">
-        <button class="btn-encrypt" onclick="processText('encrypt')">تشفير (Encrypt)</button>
-        <button class="btn-decrypt" onclick="processText('decrypt')">فك التشفير (Decrypt)</button>
+      <button class="btn-encrypt" onclick="processText('encrypt')">تشفير (Encrypt)</button>
+      <button class="btn-decrypt" onclick="processText('decrypt')">فك التشفير (Decrypt)</button>
     </div>
 
     <div class="form-group">
-        <label>النتيجة:</label>
-        <div id="resultOutput" class="result-box">تظهر النتيجة هنا...</div>
+      <label for="resultOutput">النتيجة:</label>
+      <div id="resultOutput" class="result-box" aria-live="polite">تظهر النتيجة هنا...</div>
+      <button class="btn-copy" onclick="copyResult()">نسخ النتيجة</button>
+      <p class="note">ملاحظة: هذه الخوارزميات تعليمية وليست مناسبة لحماية البيانات الحساسة. في XOR، انسخ ناتج Base64 كاملًا إلى حقل النص عند فك التشفير، واستخدم المفتاح نفسه.</p>
     </div>
-</div>
+  </main>
 
 <script>
-    function updateKeyLabel() {
-        const algo = document.getElementById('algorithm').value;
-        const keyLabel = document.getElementById('keyLabel');
-        const keyInput = document.getElementById('keyInput');
+  function updateKeyLabel() {
+    const algo = document.getElementById("algorithm").value;
+    const label = document.getElementById("keyLabel");
+    const input = document.getElementById("keyInput");
 
-        if (algo === 'caesar') {
-            keyLabel.innerText = 'مقدار الإزاحة (Shift Number):';
-            keyInput.placeholder = 'مثال: 3';
-            keyInput.type = 'number';
-        } else if (algo === 'railfence') {
-            keyLabel.innerText = 'العمق (Depth / Rails Number):';
-            keyInput.placeholder = 'مثال: 3';
-            keyInput.type = 'number';
-        } else {
-            keyLabel.innerText = 'المفتاح النصي (Secret Key):';
-            keyInput.placeholder = 'أدخل كلمة السر أو النص...';
-            keyInput.type = 'text';
-        }
+    if (algo === "caesar") {
+      label.textContent = "مقدار الإزاحة (Shift Number):";
+      input.placeholder = "مثال: 3";
+      input.type = "number";
+    } else if (algo === "railfence") {
+      label.textContent = "العمق (Depth / Rails Number):";
+      input.placeholder = "مثال: 3";
+      input.type = "number";
+    } else if (algo === "xor") {
+      label.textContent = "مفتاح XOR السري:";
+      input.placeholder = "أدخل المفتاح، مثال: 123";
+      input.type = "text";
+    } else if (algo === "columnar") {
+      label.textContent = "المفتاح النصي (Columnar Key):";
+      input.placeholder = "مثال: ZEBRA";
+      input.type = "text";
+    } else {
+      label.textContent = "المفتاح النصي (Secret Key):";
+      input.placeholder = "استخدم حروفًا إنجليزية، مثال: KEY";
+      input.type = "text";
+    }
+  }
+
+  function processText(mode) {
+    const algo = document.getElementById("algorithm").value;
+    const text = document.getElementById("textInput").value;
+    const key = document.getElementById("keyInput").value.trim();
+    const output = document.getElementById("resultOutput");
+
+    if (text.length === 0 || key.length === 0) {
+      showResult("يرجى إدخال النص والمفتاح للبدء.", true);
+      return;
     }
 
-    function processText(mode) {
-        const algo = document.getElementById('algorithm').value;
-        const text = document.getElementById('textInput').value;
-        const key = document.getElementById('keyInput').value;
-        const output = document.getElementById('resultOutput');
-
-        if (!text || !key) {
-            output.innerText = "يرجى إدخال النص والمفتاح للبدء!";
-            output.style.color = "#f87171";
-            return;
+    try {
+      let result;
+      switch (algo) {
+        case "caesar": {
+          const shift = Number(key);
+          if (!Number.isInteger(shift)) throw new Error("أدخل رقم إزاحة صحيحًا.");
+          result = caesarCipher(text, shift, mode);
+          break;
         }
-
-        output.style.color = "#f8fafc";
-        let result = "";
-
-        try {
-            switch (algo) {
-                case 'caesar':
-                    result = caesarCipher(text, parseInt(key), mode);
-                    break;
-                case 'xor':
-                    result = xorCipher(text, key);
-                    break;
-                case 'vigenere':
-                    result = vigenereCipher(text, key, mode);
-                    break;
-                case 'railfence':
-                    result = railFenceCipher(text, parseInt(key), mode);
-                    break;
-                case 'columnar':
-                    result = columnarCipher(text, key, mode);
-                    break;
-            }
-            output.innerText = result;
-        } catch (e) {
-            output.innerText = "حدث خطأ أثناء معالجة البيانات. تأكد من صحة المفتاح المدخل.";
-            output.style.color = "#f87171";
+        case "xor":
+          result = xorCipher(text, key, mode);
+          break;
+        case "vigenere":
+          result = vigenereCipher(text, key, mode);
+          break;
+        case "railfence": {
+          const depth = Number(key);
+          if (!Number.isInteger(depth) || depth < 2) {
+            throw new Error("عمق Rail Fence يجب أن يكون عددًا صحيحًا لا يقل عن 2.");
+          }
+          result = railFenceCipher(text, depth, mode);
+          break;
         }
+        case "columnar":
+          result = columnarCipher(text, key, mode);
+          break;
+        default:
+          throw new Error("خوارزمية غير معروفة.");
+      }
+      showResult(result, false);
+    } catch (error) {
+      showResult(error.message || "حدث خطأ. تحقق من النص والمفتاح.", true);
+    }
+  }
+
+  function showResult(message, isError) {
+    const output = document.getElementById("resultOutput");
+    output.textContent = message;
+    output.style.color = isError ? "#f87171" : "#f8fafc";
+  }
+
+  function caesarCipher(text, shift, mode) {
+    shift = ((shift % 26) + 26) % 26;
+    if (mode === "decrypt") shift = (26 - shift) % 26;
+
+    return text.replace(/[a-zA-Z]/g, char => {
+      const base = char <= "Z" ? 65 : 97;
+      return String.fromCharCode(((char.charCodeAt(0) - base + shift) % 26) + base);
+    });
+  }
+
+  // XOR works on UTF-8 bytes and uses Base64 to make ciphertext copyable.
+  function xorCipher(text, key, mode) {
+    if (!key) throw new Error("مفتاح XOR لا يمكن أن يكون فارغًا.");
+
+    const keyBytes = new TextEncoder().encode(key);
+    let inputBytes;
+
+    if (mode === "decrypt") {
+      let binary;
+      try {
+        binary = atob(text.trim());
+      } catch {
+        throw new Error("نص XOR غير صالح. أدخل ناتج Base64 كاملًا.");
+      }
+      inputBytes = Uint8Array.from(binary, char => char.charCodeAt(0));
+    } else {
+      inputBytes = new TextEncoder().encode(text);
     }
 
-    // Caesar Cipher
-    function caesarCipher(text, shift, mode) {
-        if (mode === 'decrypt') shift = (26 - (shift % 26)) % 26;
-        return text.replace(/[a-zA-Z]/g, (c) => {
-            const base = c <= 'Z' ? 65 : 97;
-            return String.fromCharCode((c.charCodeAt(0) - base + shift) % 26 + base);
-        });
+    const outputBytes = inputBytes.map((byte, index) =>
+      byte ^ keyBytes[index % keyBytes.length]
+    );
+
+    if (mode === "encrypt") {
+      let binary = "";
+      outputBytes.forEach(byte => { binary += String.fromCharCode(byte); });
+      return btoa(binary);
     }
 
-    // XOR Cipher
-    function xorCipher(text, key) {
-        let result = '';
-        for (let i = 0; i < text.length; i++) {
-            result += String.fromCharCode(text.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+    try {
+      return new TextDecoder("utf-8", { fatal: true }).decode(outputBytes);
+    } catch {
+      throw new Error("تعذر فك التشفير. تأكد من استخدام المفتاح نفسه وأن النص المشفر صحيح.");
+    }
+  }
+
+  function vigenereCipher(text, key, mode) {
+    if (!/^[a-zA-Z]+$/.test(key)) {
+      throw new Error("مفتاح Vigenère يجب أن يحتوي على حروف إنجليزية فقط.");
+    }
+
+    let result = "";
+    let j = 0;
+    key = key.toLowerCase();
+
+    for (let i = 0; i < text.length; i++) {
+      const code = text.charCodeAt(i);
+      if (code >= 65 && code <= 90) {
+        let k = key.charCodeAt(j % key.length) - 97;
+        if (mode === "decrypt") k = (26 - k) % 26;
+        result += String.fromCharCode(((code - 65 + k) % 26) + 65);
+        j++;
+      } else if (code >= 97 && code <= 122) {
+        let k = key.charCodeAt(j % key.length) - 97;
+        if (mode === "decrypt") k = (26 - k) % 26;
+        result += String.fromCharCode(((code - 97 + k) % 26) + 97);
+        j++;
+      } else {
+        result += text[i];
+      }
+    }
+    return result;
+  }
+
+  function railFenceCipher(text, depth, mode) {
+    if (depth > text.length) depth = text.length;
+    if (depth <= 1 || text.length <= 1) return text;
+
+    if (mode === "encrypt") {
+      const rails = Array.from({ length: depth }, () => []);
+      let rail = 0;
+      let direction = 1;
+
+      for (const char of text) {
+        rails[rail].push(char);
+        if (rail === 0) direction = 1;
+        else if (rail === depth - 1) direction = -1;
+        rail += direction;
+      }
+      return rails.flat().join("");
+    }
+
+    const pattern = Array.from({ length: depth }, () => Array(text.length).fill(false));
+    let rail = 0;
+    let direction = 1;
+
+    for (let col = 0; col < text.length; col++) {
+      pattern[rail][col] = true;
+      if (rail === 0) direction = 1;
+      else if (rail === depth - 1) direction = -1;
+      rail += direction;
+    }
+
+    const grid = Array.from({ length: depth }, () => Array(text.length).fill(""));
+    let index = 0;
+    for (let r = 0; r < depth; r++) {
+      for (let c = 0; c < text.length; c++) {
+        if (pattern[r][c]) grid[r][c] = text[index++];
+      }
+    }
+
+    let result = "";
+    rail = 0;
+    direction = 1;
+    for (let col = 0; col < text.length; col++) {
+      result += grid[rail][col];
+      if (rail === 0) direction = 1;
+      else if (rail === depth - 1) direction = -1;
+      rail += direction;
+    }
+    return result;
+  }
+
+  function columnarCipher(text, key, mode) {
+    if (!key) throw new Error("المفتاح لا يمكن أن يكون فارغًا.");
+
+    const columns = key.split("").map((char, index) => ({ char, index }));
+    columns.sort((a, b) => a.char.localeCompare(b.char) || a.index - b.index);
+
+    const numCols = key.length;
+    const length = text.length;
+    const numRows = Math.ceil(length / numCols);
+
+    if (mode === "encrypt") {
+      const grid = Array.from({ length: numRows }, () => Array(numCols).fill(""));
+      for (let i = 0; i < length; i++) {
+        grid[Math.floor(i / numCols)][i % numCols] = text[i];
+      }
+      let result = "";
+      for (const column of columns) {
+        for (let row = 0; row < numRows; row++) {
+          result += grid[row][column.index];
         }
-        return result;
+      }
+      return result;
     }
 
-    // Vigenère Cipher
-    function vigenereCipher(text, key, mode) {
-        let result = '';
-        let j = 0;
-        key = key.toLowerCase();
-        
-        for (let i = 0; i < text.length; i++) {
-            let c = text.charCodeAt(i);
-            if (c >= 65 && c <= 90) { // Uppercase
-                let k = key.charCodeAt(j % key.length) - 97;
-                if (mode === 'decrypt') k = (26 - k) % 26;
-                result += String.fromCharCode((c - 65 + k) % 26 + 65);
-                j++;
-            } else if (c >= 97 && c <= 122) { // Lowercase
-                let k = key.charCodeAt(j % key.length) - 97;
-                if (mode === 'decrypt') k = (26 - k) % 26;
-                result += String.fromCharCode((c - 97 + k) % 26 + 97);
-                j++;
-            } else {
-                result += text[i];
-            }
-        }
-        return result;
+    // Reconstruct uneven columns without adding padding characters.
+    const remainder = length % numCols;
+    const grid = Array.from({ length: numRows }, () => Array(numCols).fill(""));
+    let currentPos = 0;
+
+    for (const column of columns) {
+      const colLength = numRows === 0 ? 0 :
+        (remainder === 0 || column.index < remainder ? numRows : numRows - 1);
+
+      for (let row = 0; row < colLength; row++) {
+        grid[row][column.index] = text[currentPos++];
+      }
     }
 
-    // Rail Fence Cipher
-    function railFenceCipher(text, depth, mode) {
-        if (depth <= 1) return text;
-
-        if (mode === 'encrypt') {
-            let fence = Array.from({ length: depth }, () => []);
-            let rail = 0, direction = 1;
-
-            for (let char of text) {
-                fence[rail].push(char);
-                rail += direction;
-                if (rail === 0 || rail === depth - 1) direction *= -1;
-            }
-            return fence.flat().join('');
-        } else {
-            let pattern = Array.from({ length: depth }, () => Array(text.length).fill(null));
-            let rail = 0, direction = 1;
-
-            for (let i = 0; i < text.length; i++) {
-                pattern[rail][i] = '*';
-                rail += direction;
-                if (rail === 0 || rail === depth - 1) direction *= -1;
-            }
-
-            let index = 0;
-            for (let r = 0; r < depth; r++) {
-                for (let c = 0; c < text.length; c++) {
-                    if (pattern[r][c] === '*' && index < text.length) {
-                        pattern[r][c] = text[index++];
-                    }
-                }
-            }
-
-            let result = '';
-            rail = 0; direction = 1;
-            for (let i = 0; i < text.length; i++) {
-                result += pattern[rail][i];
-                rail += direction;
-                if (rail === 0 || rail === depth - 1) direction *= -1;
-            }
-            return result;
-        }
+    let result = "";
+    for (let row = 0; row < numRows; row++) {
+      for (let col = 0; col < numCols; col++) result += grid[row][col];
     }
+    return result;
+  }
 
-    // Columnar Transposition Cipher
-    function columnarCipher(text, key, mode) {
-        const sortedKey = key.split('').map((char, index) => ({ char, index })).sort((a, b) => a.char.localeCompare(b.char));
-        const numCols = key.length;
-        const numRows = Math.ceil(text.length / numCols);
-
-        if (mode === 'encrypt') {
-            let grid = Array.from({ length: numRows }, () => Array(numCols).fill('X'));
-            for (let i = 0; i < text.length; i++) {
-                grid[Math.floor(i / numCols)][i % numCols] = text[i];
-            }
-            let result = '';
-            for (let k of sortedKey) {
-                let colIdx = k.index;
-                for (let r = 0; r < numRows; r++) {
-                    result += grid[r][colIdx];
-                }
-            }
-            return result;
-        } else {
-            let grid = Array.from({ length: numRows }, () => Array(numCols).fill(''));
-            let currentPos = 0;
-
-            for (let k of sortedKey) {
-                let colIdx = k.index;
-                for (let r = 0; r < numRows; r++) {
-                    if (currentPos < text.length) {
-                        grid[r][colIdx] = text[currentPos++];
-                    }
-                }
-            }
-            let result = '';
-            for (let r = 0; r < numRows; r++) {
-                for (let c = 0; c < numCols; c++) {
-                    result += grid[r][c];
-                }
-            }
-            return result;
-        }
+  async function copyResult() {
+    const text = document.getElementById("resultOutput").textContent;
+    try {
+      await navigator.clipboard.writeText(text);
+      showResult(text + "\n\n(تم النسخ)", false);
+    } catch {
+      showResult(text + "\n\nتعذر النسخ تلقائيًا؛ حدّد النتيجة وانسخها يدويًا.", false);
     }
+  }
 
-    // Initialize key label on page load
-    updateKeyLabel();
+  updateKeyLabel();
 </script>
-
 </body>
 </html>
