@@ -1,47 +1,248 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>أداة التشفير وفك التشفير</title>
 <style>
-*{box-sizing:border-box}body{margin:0;padding:24px;background:#0b1220;color:#e8eefc;font-family:Tahoma,Arial,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;padding:24px;background:#0b1220;color:#e8eefc;font-family:Tahoma,Arial,sans-serif}
 main{max-width:820px;margin:25px auto;background:#151f33;border:1px solid #293750;border-radius:16px;padding:22px}
-h1{text-align:center;color:#7dd3fc}p{color:#aab7d0;line-height:1.7}
+h1{text-align:center;color:#7dd3fc}
+p{color:#aab7d0;line-height:1.7}
 label{display:block;margin:15px 0 7px;font-weight:bold}
 input,textarea,select{width:100%;padding:12px;border-radius:9px;border:1px solid #40516d;background:#0d1728;color:white;font:inherit}
-textarea{min-height:110px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+textarea{min-height:110px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 button{padding:12px 18px;border:0;border-radius:9px;margin:16px 5px 8px 0;font-weight:bold;cursor:pointer}
-.primary{background:#0284c7;color:white}.secondary{background:#334155;color:white}
+.primary{background:#0284c7;color:white}
+.secondary{background:#334155;color:white}
 #result{min-height:100px;padding:14px;background:#0a1424;border:1px solid #33445f;border-radius:9px;white-space:pre-wrap;overflow-wrap:anywhere}
-small{color:#9fb0ca}@media(max-width:600px){.grid{grid-template-columns:1fr}body{padding:10px}main{padding:15px}}
-</style></head>
-<body><main>
+small{color:#9fb0ca}
+@media(max-width:600px){.grid{grid-template-columns:1fr}body{padding:10px}main{padding:15px}}
+</style>
+</head>
+<body>
+<main>
 <h1>أداة التشفير وفك التشفير</h1>
 <p style="text-align:center">اختر الخوارزمية وأدخل النص والمفتاح ثم نفّذ العملية.</p>
+
 <label>الخوارزمية</label>
 <select id="alg" onchange="hint()">
-<option value="caesar">Caesar Cipher</option><option value="xor">XOR Cipher</option>
-<option value="vigenere">Vigenère Cipher</option><option value="rail">Rail Fence Cipher</option>
-<option value="columnar">Columnar Transposition</option></select>
-<div class="grid"><div><label>العملية</label><select id="mode"><option value="enc">تشفير</option><option value="dec">فك التشفير</option></select></div>
-<div><label>المفتاح</label><input id="key" placeholder="أدخل المفتاح"></div></div>
-<label>النص</label><textarea id="input" placeholder="اكتب النص هنا..."></textarea>
-<button class="primary" onclick="run()">تنفيذ</button><button class="secondary" onclick="copy()">نسخ النتيجة</button><button class="secondary" onclick="clearAll()">مسح</button>
-<label>النتيجة</label><div id="result">ستظهر النتيجة هنا...</div><p><small id="hintText">Caesar: أدخل رقم الإزاحة مثل 3.</small></p>
+<option value="caesar">Caesar Cipher</option>
+<option value="xor">XOR Cipher</option>
+<option value="vigenere">Vigenère Cipher</option>
+<option value="rail">Rail Fence Cipher</option>
+<option value="columnar">Columnar Transposition</option>
+</select>
+
+<div class="grid">
+<div>
+<label>العملية</label>
+<select id="mode">
+<option value="enc">تشفير</option>
+<option value="dec">فك التشفير</option>
+</select>
+</div>
+<div>
+<label>المفتاح</label>
+<input id="key" placeholder="أدخل المفتاح">
+</div>
+</div>
+
+<label>النص</label>
+<textarea id="input" placeholder="اكتب النص هنا..."></textarea>
+
+<button class="primary" onclick="run()">تنفيذ</button>
+<button class="secondary" onclick="copy()">نسخ النتيجة</button>
+<button class="secondary" onclick="clearAll()">مسح</button>
+
+<label>النتيجة</label>
+<div id="result">ستظهر النتيجة هنا...</div>
+<p><small id="hintText">Caesar: أدخل رقم الإزاحة مثل 3.</small></p>
 </main>
+
 <script>
 const $=id=>document.getElementById(id);
-function hint(){let a=$('alg').value;$('hintText').textContent={caesar:'Caesar: أدخل رقم الإزاحة مثل 3.',xor:'XOR: أدخل مفتاحًا نصيًا؛ الناتج المشفر بصيغة Base64.',vigenere:'Vigenère: استخدم مفتاحًا من الأحرف الإنجليزية.',rail:'Rail Fence: أدخل عدد الأسطر مثل 3.',columnar:'Columnar: أدخل مفتاحًا نصيًا مثل ZEBRA.'}[a];}
-function caesar(s,n){if(!Number.isInteger(n))throw Error('مفتاح Caesar يجب أن يكون رقمًا صحيحًا.');return [...s].map(c=>{let x=c.charCodeAt(0);if(x>=65&&x<=90)return String.fromCharCode((x-65+n+2600)%26+65);if(x>=97&&x<=122)return String.fromCharCode((x-97+n+2600)%26+97);return c}).join('')}
-function vig(s,k,dec){k=k.toUpperCase().replace(/[^A-Z]/g,'');if(!k)throw Error('مفتاح Vigenère يجب أن يحتوي أحرفًا إنجليزية.');let j=0;return [...s].map(c=>{let x=c.charCodeAt(0);if((x>=65&&x<=90)||(x>=97&&x<=122)){let b=x>=97?97:65,n=k.charCodeAt(j++%k.length)-65;return String.fromCharCode((x-b+(dec?-n:n)+2600)%26+b)}return c}).join('')}
-function railEnc(s,n){if(n<2)throw Error('عدد الأسطر يجب أن يكون 2 أو أكثر.');let a=Array.from({length:n},()=>[]),r=0,d=1;for(let c of s){a[r].push(c);if(r===0)d=1;else if(r===n-1)d=-1;r+=d}return a.map(x=>x.join('')).join('')}
-function railDec(s,n){if(n<2)throw Error('عدد الأسطر يجب أن يكون 2 أو أكثر.');let p=[],r=0,d=1;for(let i=0;i<s.length;i++){p.push(r);if(r===0)d=1;else if(r===n-1)d=-1;r+=d}let counts=Array(n).fill(0);p.forEach(x=>counts[x]++);let rows=[],q=0;for(let c of counts){rows.push(s.slice(q,q+c).split(''));q+=c}let ix=Array(n).fill(0);return p.map(x=>rows[x][ix[x]++]).join('')}
-function colEnc(s,k){if(!k)throw Error('أدخل مفتاح Columnar.');let order=[...k.toUpperCase()].map((c,i)=>({c,i})).sort((a,b)=>a.c.localeCompare(b.c)||a.i-b.i),o='';for(let x of order)for(let i=x.i;i<s.length;i+=k.length)o+=s[i];return o}
-function colDec(s,k){if(!k)throw Error('أدخل مفتاح Columnar.');let n=k.length,rows=Math.ceil(s.length/n),rem=s.length%n,order=[...k.toUpperCase()].map((c,i)=>({c,i})).sort((a,b)=>a.c.localeCompare(b.c)||a.i-b.i),cols=Array(n),p=0;for(let x of order){let len=rows-(rem&&x.i>=rem?1:0);cols[x.i]=s.slice(p,p+len).split('');p+=len}let o='';for(let r=0;r<rows;r++)for(let c=0;c<n;c++)if(cols[c][r]!==undefined)o+=cols[c][r];return o}
-function xorEnc(s,k){if(!k)throw Error('أدخل مفتاح XOR.');let d=new TextEncoder().encode(s),key=new TextEncoder().encode(k),o=d.map((b,i)=>b^key[i%key.length]),raw='';o.forEach(b=>raw+=String.fromCharCode(b));return btoa(raw)}
-function xorDec(s,k){if(!k)throw Error('أدخل مفتاح XOR.');let raw;try{raw=atob(s.trim())}catch(e){throw Error('النص المشفر ليس Base64 صحيحًا.')}let d=Uint8Array.from(raw,c=>c.charCodeAt(0)),key=new TextEncoder().encode(k);if(!key.length)throw Error('أدخل مفتاح XOR.');return new TextDecoder().decode(d.map((b,i)=>b^key[i%key.length]))}
-function run(){let s=$('input').value,k=$('key').value.trim(),dec=$('mode').value==='dec',a=$('alg').value;try{if(!s)throw Error('أدخل النص أولاً.');let out;if(a==='caesar')out=caesar(s,(dec?-1:1)*Number(k));else if(a==='vigenere')out=vig(s,k,dec);else if(a==='rail'){let n=Number(k);if(!Number.isInteger(n))throw Error('عدد الأسطر يجب أن يكون رقمًا صحيحًا.');out=dec?railDec(s,n):railEnc(s,n)}else if(a==='columnar')out=dec?colDec(s,k):colEnc(s,k);else out=dec?xorDec(s,k):xorEnc(s,k);$('result').textContent=out}catch(e){$('result').textContent='خطأ: '+e.message}}
-async function copy(){let s=$('result').textContent;if(!s||s==='ستظهر النتيجة هنا...')return;try{await navigator.clipboard.writeText(s);alert('تم النسخ')}catch(e){alert('حدد النتيجة وانسخها يدويًا')}}
-function clearAll(){$('input').value='';$('key').value='';$('result').textContent='ستظهر النتيجة هنا...'}
+
+function hint(){
+let a=$('alg').value;
+$('hintText').textContent={
+caesar:'Caesar: أدخل رقم الإزاحة مثل 3.',
+xor:'XOR: أدخل النص والمفتاح بأرقام 0 و1 فقط وبالطول نفسه.',
+vigenere:'Vigenère: استخدم مفتاحًا من الأحرف الإنجليزية.',
+rail:'Rail Fence: أدخل عدد الأسطر مثل 3.',
+columnar:'Columnar: أدخل مفتاحًا نصيًا مثل ZEBRA.'
+}[a];
+}
+
+function caesar(s,n){
+if(!Number.isInteger(n))throw Error('مفتاح Caesar يجب أن يكون رقمًا صحيحًا.');
+return [...s].map(c=>{
+let x=c.charCodeAt(0);
+if(x>=65&&x<=90)return String.fromCharCode((x-65+n+2600)%26+65);
+if(x>=97&&x<=122)return String.fromCharCode((x-97+n+2600)%26+97);
+return c;
+}).join('');
+}
+
+function vig(s,k,dec){
+k=k.toUpperCase().replace(/[^A-Z]/g,'');
+if(!k)throw Error('مفتاح Vigenère يجب أن يحتوي أحرفًا إنجليزية.');
+let j=0;
+return [...s].map(c=>{
+let x=c.charCodeAt(0);
+if((x>=65&&x<=90)||(x>=97&&x<=122)){
+let b=x>=97?97:65;
+let n=k.charCodeAt(j++%k.length)-65;
+return String.fromCharCode((x-b+(dec?-n:n)+2600)%26+b);
+}
+return c;
+}).join('');
+}
+
+function railEnc(s,n){
+if(n<2)throw Error('عدد الأسطر يجب أن يكون 2 أو أكثر.');
+let a=Array.from({length:n},()=>[]),r=0,d=1;
+for(let c of s){
+a[r].push(c);
+if(r===0)d=1;
+else if(r===n-1)d=-1;
+r+=d;
+}
+return a.map(x=>x.join('')).join('');
+}
+
+function railDec(s,n){
+if(n<2)throw Error('عدد الأسطر يجب أن يكون 2 أو أكثر.');
+let p=[],r=0,d=1;
+for(let i=0;i<s.length;i++){
+p.push(r);
+if(r===0)d=1;
+else if(r===n-1)d=-1;
+r+=d;
+}
+let counts=Array(n).fill(0);
+p.forEach(x=>counts[x]++);
+let rows=[],q=0;
+for(let c of counts){
+rows.push(s.slice(q,q+c).split(''));
+q+=c;
+}
+let ix=Array(n).fill(0);
+return p.map(x=>rows[x][ix[x]++]).join('');
+}
+
+function colEnc(s,k){
+if(!k)throw Error('أدخل مفتاح Columnar.');
+let order=[...k.toUpperCase()].map((c,i)=>({c,i}))
+.sort((a,b)=>a.c.localeCompare(b.c)||a.i-b.i);
+let o='';
+for(let x of order)
+for(let i=x.i;i<s.length;i+=k.length)o+=s[i];
+return o;
+}
+
+function colDec(s,k){
+if(!k)throw Error('أدخل مفتاح Columnar.');
+let n=k.length,rows=Math.ceil(s.length/n),rem=s.length%n;
+let order=[...k.toUpperCase()].map((c,i)=>({c,i}))
+.sort((a,b)=>a.c.localeCompare(b.c)||a.i-b.i);
+let cols=Array(n),p=0;
+for(let x of order){
+let len=rows-(rem&&x.i>=rem?1:0);
+cols[x.i]=s.slice(p,p+len).split('');
+p+=len;
+}
+let o='';
+for(let r=0;r<rows;r++)
+for(let c=0;c<n;c++)
+if(cols[c][r]!==undefined)o+=cols[c][r];
+return o;
+}
+
+/* XOR الثنائي */
+function xorBinary(s,k){
+if(!/^[01]+$/.test(s))
+throw Error('في XOR أدخل النص باستخدام 0 و1 فقط.');
+
+if(!/^[01]+$/.test(k))
+throw Error('في XOR أدخل المفتاح باستخدام 0 و1 فقط.');
+
+if(s.length!==k.length)
+throw Error('يجب أن يكون طول المفتاح مساويًا لطول النص.');
+
+let out='';
+for(let i=0;i<s.length;i++){
+out+=(s[i]===k[i]?'0':'1');
+}
+return out;
+}
+
+function xorEnc(s,k){
+return xorBinary(s,k);
+}
+
+function xorDec(s,k){
+return xorBinary(s,k);
+}
+
+function run(){
+let s=$('input').value;
+let k=$('key').value.trim();
+let dec=$('mode').value==='dec';
+let a=$('alg').value;
+
+try{
+if(!s)throw Error('أدخل النص أولاً.');
+
+let out;
+
+if(a==='caesar')
+out=caesar(s,(dec?-1:1)*Number(k));
+
+else if(a==='vigenere')
+out=vig(s,k,dec);
+
+else if(a==='rail'){
+let n=Number(k);
+if(!Number.isInteger(n))
+throw Error('عدد الأسطر يجب أن يكون رقمًا صحيحًا.');
+out=dec?railDec(s,n):railEnc(s,n);
+}
+
+else if(a==='columnar')
+out=dec?colDec(s,k):colEnc(s,k);
+
+else
+out=xorBinary(s,k);
+
+$('result').textContent=out;
+
+}catch(e){
+$('result').textContent='خطأ: '+e.message;
+}
+}
+
+async function copy(){
+let s=$('result').textContent;
+if(!s||s==='ستظهر النتيجة هنا...')return;
+try{
+await navigator.clipboard.writeText(s);
+alert('تم النسخ');
+}catch(e){
+alert('حدد النتيجة وانسخها يدويًا');
+}
+}
+
+function clearAll(){
+$('input').value='';
+$('key').value='';
+$('result').textContent='ستظهر النتيجة هنا...';
+}
+
 hint();
-</script></body></html>
+</script>
+</body>
+</html>
